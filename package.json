@@ -1,0 +1,16 @@
+{
+  "name" : "MongoDB",
+  "version" : "0.0.5",
+  "author" : "rbmjr <rick.morrow@montgomerycollege.edu>",
+  "description" : "Static Content on Port 8084",
+  "dependencies" : {
+	/*
+    "express" : ">=4.0.0",
+	"mongodb" : ">=1.4.0"
+	*/
+  },
+  "license" : "GPL",
+  "engines" : {
+	"node" : ">=0.10"
+	}
+}
