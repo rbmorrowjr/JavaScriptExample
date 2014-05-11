@@ -3,329 +3,229 @@
 <head>
 <title>UserForm</title>
 <script language="javascript">
-	/*
-	var UserData = new Object();
-	UserData.firstname = "Rick";
-	UserData.lastname = "Morrow";
-	UserData.address1 = "12 South Summit Avenue";
-	UserData.address2 = "GBTC419";
-	UserData.city = "Gaithersburg";
-	UserData.state = "MD";
-	UserData.zip = "20877";
-	*/
-	/*
-	var firstname = string;
-	var lastname = string;
-	var address1 = string;
-	var address2 = string;
-	var city = new string;
-	var state = new string;
-	var zip = new string;
-	*/
-	window.firstname = "Rick";
-	window.lastname = "Morrow";
-	window.address1 = "12 South Summit Avenue";
-	window.address2 = "GBTC419";
-	window.city = "Gaithersburg";
-	window.State = "MD";
-	window.zip = "20877";
-	/*
-	var Control = new Object();
-	Control.WhereWeAre = "beg";
-	Control.WhereWeWere = "end";
-	*/
-	/*
-	var WhereWeAre = new String;
-	var WhereWeWere = new String;
-	*/
-	window.WhereWeAre = "beg";
-	window.WhereWeWere = "end";
-	window.MsgTxt = "";
-	
+
+function UserRecord(key,firstname,lastname,address1,address2,city,state,zip) {
+        this.key=(key != undefined) ? key : 0; // the "this." part is required
+        this.firstname=(firstname != undefined) ? firstname : "";   
+        this.lastname=(lastname != undefined) ? lastname : "";
+        this.address1=(address1 != undefined) ? address1 : "12 South Summit Ave"; //default value is "12 South Summit Ave"
+        this.address2=(address2 != undefined) ? address2 : "";
+        this.city=(city != undefined) ? city : "Gaithersburg";
+        this.state=(state != undefined) ? state : "MD";
+        this.zip=(zip != undefined) ? zip : "20877";
+}
+// var UserRecords = []; // blank array for testing
+
+var UserRecords = [
+    new UserRecord("0","Denise","Morrow","17 Kent Gardens Circle","","Gaithersburg","MD","20878"), 
+    new UserRecord("1","Rick","Morrow","12 South Summit Avenue","GBTC419","Gaithersburg","MD","20877"),
+    new UserRecord("2","John","Doe","51 Mannakee Street","OITB","Rockville","MD","20850"),
+    new UserRecord("3","Jane","Doe","51 Mannakee Street","OITB","Rockville","MD","20850")
+];
+
+/*
+function BuildOutputTable() {
+    var sOut="<table border=2>";
+    sOut +="<tr>";
+    sOut +="<td>Key</td><td>First Name</td><td>Last Name</td><td>Address1</td><td>Address2</td><td>City</td><td>State</td><td>Zip</td>"
+    sOut +="</tr>";
+    for ( var j=0; j<UserRecords.length; j++ ) {
+        var rP= UserRecords[j];  // a UserRecords object
+        sOut += "<tr>";
+        sOut += "<td>" +rP.key+ "</td>";
+        sOut += "<td>" +rP.firstname+ "</td>";
+        sOut += "<td>" +rP.lastname+ "</td>";
+        sOut += "<td>" +rP.address1+ "</td>";
+        sOut += "<td>" +rP.address2+ "</td>";
+        sOut += "<td>" +rP.city+ "</td>";
+        sOut += "<td>" +rP.state+ "</td>";
+        sOut += "<td>" +rP.zip+ "</td>";
+        sOut += "</tr>";
+    }
+    sOut += "</table>";
+    window.alert(sOut);
+    return(sOut);
+}
+*/
+
+/*
+var rP = new UserRecord(key,firstname,lastname,address1,address2,city,state,zip); // a UserRecord object
+*/
+
+// holding area for original form field data
+var oldkey = "";
+var oldfirstname = "";
+var oldlastname = "";
+var oldaddress1 = "";
+var oldaddress2 = "";
+var oldcity = "";
+var oldstate = "";
+var oldzip = "";
+// application variables
+var WhereWeAre = "beg";
+var WhereWeWere = "end";
+var arrayoffset = 0;
+
+
 function FirstRecord (form) {
-	// add code here to find the first record in the database
 	WhereWeAre = "fir";
-	
+        
 	DisableSavAndCan();
-	/*
-	form.fir.disabled=false;
-	form.pre.disabled=false;
-	form.nex.disabled=false;
-	form.las.disabled=false;
-	form.add.disabled=false;
-	form.upd.disabled=false;
-	form.del.disabled=false;
-	form.loc.disabled=false;
-	form.sav.disabled=true;
-	form.can.disabled=true;
-	*/
-	MoveDataToInputFields ()
-	/*
-	form.firstname.value = window.lastname;
-	form.lastname.value = window.firstname;
-	form.address1.value = window.address1;
-	form.address2.value = window.address2;
-	form.city.value = window.city;
-	form.state.value  = window.State;
-	form.zip.value = window.zip;
-	*/	
+	// Locating the first record in the array
+    if (typeof UserRecords !== 'undefined' && UserRecords.length > 0) {
+        // the array is defined and has at least one element so lets get the record at offset zero
+        arrayoffset = 0;
+        document.getElementById("UserForm").elements["message"].value="Displaying first record in array. Record: " + String(arrayoffset);
+    }
+    else {
+        //tells the MoveDataToInputFields routine to use the default data
+        arrayoffset = -1;
+        document.getElementById("UserForm").elements["message"].value="No records in array";
+    }
+    //window.alert("About to execute: MoveDataToInputFields");
+	MoveDataToInputFields ();
+
+    //window.alert("About to set: WhereWeWere");
 	WhereWeWere = "fir";
-	form.message.value = WhereWeWere;
+    // manage form buttons here
 }
 function PreviousRecord (form) {
-	// add code here to find the previous record in the database
-	// note if going previous returns the first record in the database change the message
 	WhereWeAre = "pre";
 
 	DisableSavAndCan();
-	/*
-	form.fir.disabled=false;
-	form.pre.disabled=false;
-	form.nex.disabled=false;
-	form.las.disabled=false;
-	form.add.disabled=false;
-	form.upd.disabled=false;
-	form.del.disabled=false;
-	form.loc.disabled=false;
-	form.sav.disabled=true;
-	form.can.disabled=true;
-	*/
-	MoveDataToInputFields ()
-	/*
-	form.firstname.value = "PreDbRec";
-	form.lastname.value = "PreDbRec";
-	form.address1.value = "PreDbRec";
-	form.address2.value = "PreDbRec";
-	form.city.value = "PreDbRec";
-	form.state.value  = "DB";
-	form.zip.value = "PreDb";
-	*/
+	// add code here to find the previous record in the database
+	// note if going previous returns the first record in the database change the message
+    if (typeof UserRecords !== 'undefined' && UserRecords.length > 0) {
+        // the array is defined and has at least one element
+        // lets decrement the array offset and get the previous record.
+        // if we go negative then we were already at the first record in the array
+        if (arrayoffset - 1 < 0) {
+            document.getElementById("UserForm").elements["message"].value="Displaying first record in array. Record: " + String(arrayoffset);
+        }
+        else {
+            arrayoffset -= 1
+            document.getElementById("UserForm").elements["message"].value="Displaying previous record in array. Record: " + String(arrayoffset);
+        }
+    }
+    else {
+        //tells the MoveDataToInputFields routine to use the default data
+        arrayoffset = -1;
+        document.getElementById("UserForm").elements["message"].value="No records in array";
+    }
+	MoveDataToInputFields ();
+
 	WhereWeWere = "pre";
-	form.message.value = WhereWeWere;
+    // manage form buttons here
 }
+
 function AddRecord (form) {
-	// add code here to do these things
-	// first disable all buttons except submit and cancel
-	// second remove the readonly tag on the input fields
-	// third store what routine we were in to help the cancel / submit buttons
 	WhereWeAre = "add";
 	
 	EnableSavAndCan();
-	/*	
-	form.fir.disabled=true;
-	form.pre.disabled=true;
-	form.nex.disabled=true;
-	form.las.disabled=true;
-	form.add.disabled=true;
-	form.upd.disabled=true;
-	form.del.disabled=true;
-	form.loc.disabled=true;
-	form.sav.disabled=false;
-	form.can.disabled=false;
-	*/
-	// save the current record data for when action is cancelled
-	window.firstname = form.firstname.value;
-	window.lastname = form.lastname.value;
-	window.address1 = form.address1.value;
-	window.address2 = form.address2.value;
-	window.city = form.city.value;
-	window.State = form.state.value;
-	window.zip = form.zip.value;
-
+    HoldFormData();
 	EnableInputFields();
-	/*
-	form.lastname.disabled=false;
-	form.firstname.disabled=false;
-	form.address1.disabled=false;
-	form.address2.disabled=false;
-	form.city.disabled=false;
-	form.state.disabled=false;
-	form.zip.disabled=false;
-	*/
 	ClearInputFields();
-	/*
-	form.firstname.value = "";
-	form.lastname.value = "";
-	form.address1.value = "";
-	form.address2.value = "";
-	form.city.value = "";
-	form.state.value  = "";
-	form.zip.value = "";
-	*/
-	WhereWeWere = "add";
-	form.sav.value = WhereWeWere;
-	form.message.value = WhereWeWere;
-	form.message.value = "Change record data. Press '" + WhereWeWere +"' to update, 'Can' to cancel";
+	
+    WhereWeWere = "add";
+    // manage form buttons and messages
+    document.getElementById("UserForm").elements["message"].value = "Change record data. Press '" + WhereWeWere + "' to complete action, 'Can' to cancel";
+    // Change the text on the "sav" button to "add"
+	document.getElementById("UserForm").elements["sav"].value = WhereWeWere;
 }
+
 function UpdateRecord (form) {
 	WhereWeAre = "upd";
 	
 	EnableSavAndCan();
-	/*
-	form.fir.disabled=true;
-	form.pre.disabled=true;
-	form.nex.disabled=true;
-	form.las.disabled=true;
-	form.add.disabled=true;
-	form.upd.disabled=true;
-	form.del.disabled=true;
-	form.loc.disabled=true;
-	form.sav.disabled=false;
-	form.can.disabled=false;
-	*/
-	// save the current record data for when action is cancelled
-	window.firstname = form.firstname.value;
-	window.lastname = form.lastname.value;
-	window.address1 = form.address1.value;
-	window.address2 = form.address2.value;
-	window.city = form.city.value;
-	window.State = form.state.value;
-	window.zip = form.zip.value;
-
+    HoldFormData();
 	EnableInputFields();
-	/*
-	form.lastname.disabled=false;
-	form.firstname.disabled=false;
-	form.address1.disabled=false;
-	form.address2.disabled=false;
-	form.city.disabled=false;
-	form.state.disabled=false;
-	form.zip.disabled=false;
-	*/
-
+	
 	WhereWeWere = "upd";
-	form.sav.value = WhereWeWere;
-	form.message.value = WhereWeWere;
-	form.message.value = "Change record data. Press '" + WhereWeWere +"' to update, 'Can' to cancel";
+    // manage form buttons and messages
+    document.getElementById("UserForm").elements["message"].value = "Change record data. Press '" + WhereWeWere +"' to complete action, 'Can' to cancel";
+    // Change the text on the "sav" button to "upd"
+	document.getElementById("UserForm").elements["sav"].value = WhereWeWere;
 }
 
 function DeleteRecord (form) {
 	WhereWeAre = "del";
 	
 	EnableSavAndCan();
-	/*
-	form.fir.disabled=true;
-	form.pre.disabled=true;
-	form.nex.disabled=true;
-	form.las.disabled=true;
-	form.add.disabled=true;
-	form.upd.disabled=true;
-	form.del.disabled=true;
-	form.loc.disabled=true;
-	form.sav.disabled=false;
-	form.can.disabled=false;
-	*/
-	// save the current record data for when action is cancelled
-	window.firstname = form.firstname.value;
-	window.lastname = form.lastname.value;
-	window.address1 = form.address1.value;
-	window.address2 = form.address2.value;
-	window.city = form.city.value;
-	window.State = form.state.value;
-	window.zip = form.zip.value;
-	
-	form.sav.name="del";
+    HoldFormData();
 	
 	WhereWeWere = "del";
-	form.sav.value = WhereWeWere;
-	form.message.value = WhereWeWere;
-	form.message.value = "Change record data. Press '" + WhereWeWere +"' to update, 'Can' to cancel";
+    // manage form buttons and messages
+    document.getElementById("UserForm").elements["message"].value = "Change record data. Press '" + WhereWeWere +"' to complete action, 'Can' to cancel";
+    // Change the text on the "sav" button to "del"
+	document.getElementById("UserForm").elements["sav"].value = WhereWeWere;
 }
+
 function Save (form) {
 	WhereWeAre = "sav";
 	
 	DisableSavAndCan();
-	/*
-	form.fir.disabled=false;
-	form.pre.disabled=false;
-	form.nex.disabled=false;
-	form.las.disabled=false;
-	form.add.disabled=false;
-	form.upd.disabled=false;
-	form.del.disabled=false;
-	form.loc.disabled=false;
-	form.sav.disabled=true;
-	form.can.disabled=true;
-	*/
-	var firstname = form.firstname.value;
-	var lastname = form.lastname.value;
-	var address1 = form.address1.value;
-	var address2 = form.address2.value;
-	var city = form.city.value;
-	var state = form.state.value;
-	var zip = form.zip.value;
-	
 	DisableInputFields();
-	/*
-	form.lastname.disabled=true;
-	form.firstname.disabled=true;
-	form.address1.disabled=true;
-	form.address2.disabled=true;
-	form.city.disabled=true;
-	form.state.disabled=true;
-	form.zip.disabled=true;
-	*/
-	//add, update or delete record here
-	//alert("WhereWeWere: " + WhereWeWere);
+
 	switch (WhereWeWere)
 	{
 	case "add":
-		form.message.value = "Added: " + firstname + " " + lastname + " " + address1 + " " + address2 + " " + city + " " + state + " " + zip;
+                // add record here
+                //UserRecords.push(new UserRecord(String(UserRecords.length), document.getElementById("UserForm").elements["firstname"].value, document.getElementById("UserForm").elements["lastname"].value, document.getElementById("UserForm").elements["address1"].value, document.getElementById("UserForm").elements["address2"].value, document.getElementById("UserForm").elements["city"].value, document.getElementById("UserForm").elements["state"].value, document.getElementById("UserForm").elements["zip"].value));
+                UserRecords.push(new UserRecord(String(UserRecords.length), 
+                    document.getElementById("UserForm").elements["firstname"].value, 
+                    document.getElementById("UserForm").elements["lastname"].value, 
+                    document.getElementById("UserForm").elements["address1"].value, 
+                    document.getElementById("UserForm").elements["address2"].value, 
+                    document.getElementById("UserForm").elements["city"].value, 
+                    document.getElementById("UserForm").elements["state"].value, 
+                    document.getElementById("UserForm").elements["zip"].value));
+                // update form fields 
+                document.getElementById("UserForm").elements["key"].value=UserRecords[UserRecords.length-1].key; // and display it in the Key form field too
+                // update form message 
+		document.getElementById("UserForm").elements["message"].value = "Added Record at Index: " + String(UserRecords.length-1);
 		break;
 	case "upd":
-		form.message.value = "Updated: " + firstname + " " + lastname + " " + address1 + " " + address2 + " " + city + " " + state + " " + zip;
+                // update record here
+                UserRecords[arrayoffset].key = document.getElementById("UserForm").elements["key"].value;
+                UserRecords[arrayoffset].firstname = document.getElementById("UserForm").elements["firstname"].value;
+                UserRecords[arrayoffset].lastname = document.getElementById("UserForm").elements["lastname"].value;
+                UserRecords[arrayoffset].address1 = document.getElementById("UserForm").elements["address1"].value;
+                UserRecords[arrayoffset].address2 = document.getElementById("UserForm").elements["address2"].value;
+                UserRecords[arrayoffset].city = document.getElementById("UserForm").elements["city"].value;
+                UserRecords[arrayoffset].state = document.getElementById("UserForm").elements["state"].value;
+                UserRecords[arrayoffset].zip = document.getElementById("UserForm").elements["zip"].value;
+                // update form message 
+		document.getElementById("UserForm").elements["message"].value = "Updated Record at Index: " + String(UserRecords.length-1);
 		break;
 	case "del":
-		form.message.value = "Deleted: " + firstname + " " + lastname + " " + address1 + " " + address2 + " " + city + " " + state + " " + zip;
+                // delete record here
+                UserRecords.splice(arrayoffset,1)
+                // update form message 
+		document.getElementById("UserForm").elements["message"].value = "Deleted Record at Index: " + String(UserRecords.length-1);
 		break;
 	case "loc":
-		form.message.value = "Locating: " + firstname + " " + lastname + " " + address1 + " " + address2 + " " + city + " " + state + " " + zip;
+                // find record here
+		document.getElementById("UserForm").elements["message"].value  = "Locating: " + window.newkey + " " + window.newfirstname + " " + window.newlastname + " " + window.newaddress1 + " " + window.newaddress2 + " " + window.newcity + " " + window.newstate + " " + window.newzip;
 		break;
 	default:
-	 	form.message.value = "Impossible case: " + WhereWeAre;
-	} 
+	 	document.getElementById("UserForm").elements["message"].value  = "Impossible case: " + WhereWeAre;
+	}
+
 	WhereWeWere = "sav";
-	form.sav.value = "sav";
-	//form.message.value = WhereWeWere;
+    // manage form buttons
+	document.getElementById("UserForm").elements["sav"].value = WhereWeWere;
+    // manage messages
+    // document.getElementById("UserForm").elements["message"].value = WhereWeWere;
+
 }
+
 function Cancel (form) {
 	WhereWeAre = "can";
 	
 	DisableSavAndCan();
-	/*
-	form.fir.disabled=false;
-	form.pre.disabled=false;
-	form.nex.disabled=false;
-	form.las.disabled=false;
-	form.add.disabled=false;
-	form.upd.disabled=false;
-	form.del.disabled=false;
-	form.loc.disabled=false;
-	form.sav.disabled=true;
-	form.can.disabled=true;
-	*/
-	// restore the current record data for when action is cancelled
-	form.firstname.value = window.firstname;
-	form.lastname.value = window.lastname;
-	form.address1.value = window.address1;
-	form.address2.value = window.address2;
-	form.city.value = window.city;
-	form.state.value = window.State;
-	form.zip.value = window.zip;
-	
+        RestFormData();
 	DisableInputFields();
-	/*
-	form.lastname.disabled=true;
-	form.firstname.disabled=true;
-	form.address1.disabled=true;
-	form.address2.disabled=true;
-	form.city.disabled=true;
-	form.state.disabled=true;
-	form.zip.disabled=true;
-	*/
-
-	//add, update or delete record here
-	//alert("WhereWeWere: " + WhereWeWere);
+	// action cancelled. Inform user
 	switch (WhereWeWere)
 	{
 	case "add":
@@ -343,124 +243,83 @@ function Cancel (form) {
 	default:
 	 	form.message.value = "Impossible case: " + WhereWeAre;
 	} 
+
 	WhereWeWere = "can";
-	form.sav.value = "sav";
-	//form.message.value = WhereWeWere;
+        // manage form buttons and messages
+        // message set above
+        // return the text on the "sav" button to "sav"
+	document.getElementById("UserForm").elements["sav"].value = "sav";
 }
+
 function LocateRecord (form) {
 	WhereWeAre = "loc";
 	
 	EnableSavAndCan();
-	/*
-	form.fir.disabled=true;
-	form.pre.disabled=true;
-	form.nex.disabled=true;
-	form.las.disabled=true;
-	form.add.disabled=true;
-	form.upd.disabled=true;
-	form.del.disabled=true;
-	form.loc.disabled=true;
-	form.sav.disabled=false;
-	form.can.disabled=false;
-	*/
-	// save the current record data for when action is cancelled
-	window.firstname = form.firstname.value;
-	window.lastname = form.lastname.value;
-	window.address1 = form.address1.value;
-	window.address2 = form.address2.value;
-	window.city = form.city.value;
-	window.State = form.state.value;
-	window.zip = form.zip.value;
+    HoldFormData();
+    // Allow user to enter what they want to search for
+    EnableInputFields();
+    // Use pop up box to limit searching to a single form field
+    // write pop-up box code and put it here
+    // only enable the input field that they choose
+    // place cursor there
+    ClearInputFields ();
 
-	EnableInputFields();
-	/*
-	form.lastname.disabled=false;
-	form.firstname.disabled=false;
-	form.address1.disabled=false;
-	form.address2.disabled=false;
-	form.city.disabled=false;
-	form.state.disabled=false;
-	form.zip.disabled=false;
-	*/
-	ClearInputFields ()
-	/*
-	form.firstname.value = "";
-	form.lastname.value = "";
-	form.address1.value = "";
-	form.address2.value = "";
-	form.city.value = "";
-	form.state.value  = "";
-	form.zip.value = "";
-	*/
-	WhereWeWere = "loc";
-	form.sav.value = WhereWeWere;
-	form.message.value = WhereWeWere;
-	form.message.value = "Enter something to locate. Press '" + WhereWeWere +"' to locate, 'Can' to cancel";
+    WhereWeWere = "loc";
+    // manage form buttons and messages
+    document.getElementById("UserForm").elements["message"].value = "Enter something to locate. Press '" + WhereWeWere + "' to complete action, 'Can' to cancel";
+    // Change the text on the "sav" button to "loc"
+    document.getElementById("UserForm").elements["sav"].value = WhereWeWere;
 }
+
 function NextRecord (form) {
 	WhereWeAre = "nex";
 	
 	DisableSavAndCan();
-	/*
-	form.fir.disabled=false;
-	form.pre.disabled=false;
-	form.nex.disabled=false;
-	form.las.disabled=false;
-	form.add.disabled=false;
-	form.upd.disabled=false;
-	form.del.disabled=false;
-	form.loc.disabled=false;
-	form.sav.disabled=true;
-	form.can.disabled=true;
-	*/
-	MoveDataToInputFields ()
-	/*
-	form.firstname.value = "NxtDbRec";
-	form.lastname.value = "NxtDbRec";
-	form.address1.value = "NxtDbRec";
-	form.address2.value = "NxtDbRec";
-	form.city.value = "NxtDbRec";
-	form.state.value  = "Db";
-	form.zip.value = "NxtDb";
-	*/
-	
-	//alert ("This is the next record in the database:" + firstname + " " + lastname + " " + address1 + " " + address2 + " " + city + " " + state + " " + zip);
+        if (typeof UserRecords !== 'undefined' && UserRecords.length > 0) {
+            // the array is defined and has at least one element
+            // lets increment the array offset and get the next record.
+            // if we go past the end of the array then we display the last record in the array
+            if (arrayoffset + 1 == UserRecords.length) {
+                document.getElementById("UserForm").elements["message"].value="Displaying last record in array. Record: " + String(arrayoffset);
+            }
+            else {
+                arrayoffset += 1
+                document.getElementById("UserForm").elements["message"].value="Displaying next record in array. Record: " + String(arrayoffset);
+            }
+        }
+        else {
+            //tells the MoveDataToInputFields routine to use the default data
+            arrayoffset = -1; 
+            document.getElementById("UserForm").elements["message"].value="No records in array";
+        }
+	MoveDataToInputFields ();
 	
 	WhereWeWere = "nex";
-	form.message.value = WhereWeWere;
+    // manage form buttons here
 }
 function LastRecord (form) {
 	WhereWeAre = "las";
 	
 	DisableSavAndCan();
-	/*
-	form.fir.disabled=false;
-	form.pre.disabled=false;
-	form.nex.disabled=false;
-	form.las.disabled=false;
-	form.add.disabled=false;
-	form.upd.disabled=false;
-	form.del.disabled=false;
-	form.loc.disabled=false;
-	form.sav.disabled=true;
-	form.can.disabled=true;
-	*/
-	MoveDataToInputFields ()
-	/*
-	form.firstname.value = "LstDbRec";
-	form.lastname.value = "LstDbRec";
-	form.address1.value = "LstDbRec";
-	form.address2.value = "LstDbRec";
-	form.city.value = "LstDbRec";
-	form.state.value  = "Db";
-	form.zip.value = "LstDb";
-	*/
+        if (typeof UserRecords !== 'undefined' && UserRecords.length > 0) {
+            // the array is defined and has at least one element
+            // lets find out the lenght of the array and get the last record.
+            arrayoffset = UserRecords.length -1 ;
+            document.getElementById("UserForm").elements["message"].value="Displaying last record in array. Record: " + String(arrayoffset);
+        }
+        else {
+            //tells the MoveDataToInputFields routine to use the default data
+            arrayoffset = -1; 
+            document.getElementById("UserForm").elements["message"].value="No records in array";
+        }
+	MoveDataToInputFields ();
+
 	WhereWeWere = "las";
-	form.message.value = WhereWeWere;
+    // manage form buttons here
 }
 
 function EnableSavAndCan () {
-	//alert ("Entering EnableSavAndCan");
+	// modify which form buttons are clickable and which are not
 	document.getElementById("UserForm").elements["fir"].disabled=true;
 	document.getElementById("UserForm").elements["pre"].disabled=true;
 	document.getElementById("UserForm").elements["nex"].disabled=true;
@@ -471,24 +330,10 @@ function EnableSavAndCan () {
 	document.getElementById("UserForm").elements["loc"].disabled=true;
 	document.getElementById("UserForm").elements["sav"].disabled=false;
 	document.getElementById("UserForm").elements["can"].disabled=false;
-	/*
-	form.fir.disabled=true;
-	form.pre.disabled=true;
-	form.nex.disabled=true;
-	form.las.disabled=true;
-	form.add.disabled=true;
-	form.upd.disabled=true;
-	form.del.disabled=true;
-	form.loc.disabled=true;
-	form.sav.disabled=false;
-	form.can.disabled=false;
-	*/
-	//alert ("Exiting EnableSavAndCan");
-	return;
 }
 
 function DisableSavAndCan () {
-	//alert ("Entering DisableSavAndCan");
+	// modify which form buttons are clickable and which are not
 	document.getElementById("UserForm").elements["fir"].disabled=false;
 	document.getElementById("UserForm").elements["pre"].disabled=false;
 	document.getElementById("UserForm").elements["nex"].disabled=false;
@@ -499,23 +344,11 @@ function DisableSavAndCan () {
 	document.getElementById("UserForm").elements["loc"].disabled=false;
 	document.getElementById("UserForm").elements["sav"].disabled=true;
 	document.getElementById("UserForm").elements["can"].disabled=true;
-	/*
-	form.fir.disabled=false;
-	form.pre.disabled=false;
-	form.nex.disabled=false;
-	form.las.disabled=false;
-	form.add.disabled=false;
-	form.upd.disabled=false;
-	form.del.disabled=false;
-	form.loc.disabled=false;
-	form.sav.disabled=true;
-	form.can.disabled=true;
-	*/
-	//alert ("Exiting DisableSavAndCan");
-	return; 
 }
 
 function ClearInputFields () {
+    // clear form fields for new input
+	document.getElementById("UserForm").elements["key"].value="";
 	document.getElementById("UserForm").elements["firstname"].value="";
 	document.getElementById("UserForm").elements["lastname"].value="";
 	document.getElementById("UserForm").elements["address1"].value="";
@@ -525,56 +358,57 @@ function ClearInputFields () {
 	document.getElementById("UserForm").elements["zip"].value="";
 }
 
+function HoldFormData () {
+    // save the current form data in case action is cancelled
+	window.oldkey = document.getElementById("UserForm").elements["key"].value;
+	window.oldfirstname = document.getElementById("UserForm").elements["firstname"].value;
+	window.oldlastname = document.getElementById("UserForm").elements["lastname"].value;
+	window.oldaddress1 = document.getElementById("UserForm").elements["address1"].value;
+	window.oldaddress2 = document.getElementById("UserForm").elements["address2"].value;
+	window.oldcity = document.getElementById("UserForm").elements["city"].value;
+	window.oldstate = document.getElementById("UserForm").elements["state"].value;
+	window.oldzip = document.getElementById("UserForm").elements["zip"].value;
+}
+
+function RestFormData() {
+	// action cancelled. Restore the current form data from holding
+	document.getElementById("UserForm").elements["key"].value = window.oldkey;
+	document.getElementById("UserForm").elements["firstname"].value = window.oldfirstname;
+	document.getElementById("UserForm").elements["lastname"].value = window.oldlastname;
+	document.getElementById("UserForm").elements["address1"].value = window.oldaddress1;
+	document.getElementById("UserForm").elements["address2"].value = window.oldaddress2;
+	document.getElementById("UserForm").elements["city"].value = window.oldcity;
+	document.getElementById("UserForm").elements["state"].value = window.oldstate;
+	document.getElementById("UserForm").elements["zip"].value = window.oldzip;
+}
+
 function MoveDataToInputFields () {
 	
-	// You really wouldn't do this this way... 
-	// more for illustration
-	// change each case to reflect what needs to be done
-	switch (WhereWeWere)
-	{
-	case "fir":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "pre":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "add":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "upd":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "del":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "sav":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "can":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "loc":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "nex":
-		window.MsgTxt = WhereWeAre;
-		break;
-	case "las":
-		window.MsgTxt = WhereWeAre;
-		break;
-	default:
-	 	window.MsgTxt = "Err";
-	} 
-	document.getElementById("UserForm").elements["firstname"].value=window.MsgTxt;
-	document.getElementById("UserForm").elements["lastname"].value=window.MsgTxt;
-	document.getElementById("UserForm").elements["address1"].value=window.MsgTxt;
-	document.getElementById("UserForm").elements["address2"].value=window.MsgTxt;
-	document.getElementById("UserForm").elements["city"].value=window.MsgTxt;
-	document.getElementById("UserForm").elements["state"].value=window.MsgTxt;
-	document.getElementById("UserForm").elements["zip"].value=window.MsgTxt;
+        // window.alert("Entering: MoveDataToInputFields");
+        // window.alert("window.arrayoffset is: " + String(arrayoffset));
+
+        if (arrayoffset < 0) {
+            // clear form fields the array is empty
+            // window.alert("Processing arrayoffset less than zero");
+            ClearInputFields();
+            }
+        else {
+            // put array values on the screen
+            // window.alert("Processing array data at arrayoffset " + String(arrayoffset));
+            document.getElementById("UserForm").elements["key"].value=UserRecords[arrayoffset].key;
+            document.getElementById("UserForm").elements["firstname"].value=UserRecords[arrayoffset].firstname;
+            document.getElementById("UserForm").elements["lastname"].value=UserRecords[arrayoffset].lastname;
+            document.getElementById("UserForm").elements["address1"].value=UserRecords[arrayoffset].address1;
+            document.getElementById("UserForm").elements["address2"].value=UserRecords[arrayoffset].address2;
+            document.getElementById("UserForm").elements["city"].value=UserRecords[arrayoffset].city;
+            document.getElementById("UserForm").elements["state"].value=UserRecords[arrayoffset].state;
+            document.getElementById("UserForm").elements["zip"].value=UserRecords[arrayoffset].zip;
+            }
+
 }
 
 function EnableInputFields () {
+    // enable input into form fields
 	document.getElementById("UserForm").elements["firstname"].disabled=false;
 	document.getElementById("UserForm").elements["lastname"].disabled=false;
 	document.getElementById("UserForm").elements["address1"].disabled=false;
@@ -585,6 +419,7 @@ function EnableInputFields () {
 }
 
 function DisableInputFields () {
+    // disable input in form fields
 	document.getElementById("UserForm").elements["firstname"].disabled=true;
 	document.getElementById("UserForm").elements["lastname"].disabled=true;
 	document.getElementById("UserForm").elements["address1"].disabled=true;
@@ -601,12 +436,13 @@ function DisableInputFields () {
 <h1>User Form</h1>
 <form id="UserForm" name="UserForm" method="post" action="">
   <p id="fields"> 
-  	  First name: <input type="text" id="firstname" name="firstname" size="30" disabled="disabled"/><br/>  
+      Key: <input type="text" id="key" name="key" size="30" disabled="disabled"/><br/>
+      First name: <input type="text" id="firstname" name="firstname" size="30" disabled="disabled"/><br/>  
       Last name: <input type="text" id="lastname" name="lastname" size="50" disabled="disabled"/><br/>
       Address line 1: <input type="text" id="address1" name="address1" size="50"  disabled="disabled"/><br />
       Address line 2: <input type="text" id="address2" name="address2" size="50"  disabled="disabled"/><br />
       City: <input type="text" id="city" name="city" size="30"  disabled="disabled"/><br />
-      State: <input type="text" id="state" name="state" size="2"  disabled="disabled""/><br />
+      State: <input type="text" id="state" name="state" size="2"  disabled="disabled"/><br />
       Zip: <input type="text" id="zip" name="zip" size="5"  disabled="disabled"/><br />
       </p>
   <p id="buttons">
@@ -621,7 +457,7 @@ function DisableInputFields () {
       <input type="button" id="nex" name="nex" onClick="NextRecord(this.form)" value=">">
       <input type="button" id="las" name="las" onClick="LastRecord(this.form)" value=">|">
       </p>
-  <p id="message">Messages: <input id="message" name="message" type="text" size="90" readonly="readonly"/></p>
+  <p id="message">Messages: <input id="message" name="message" type="text" size="90" disabled="disabled"/></p>
 </form>
 </body>
 </html>
