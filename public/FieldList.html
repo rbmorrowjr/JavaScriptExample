@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FieldList</title>
+<script language="javascript">
+function makeSelection(frm, id) {
+    if(!frm || !id)
+        return;
+    var elem = frm.elements[id];
+    if(!elem)
+        return;
+    var val = elem.options[elem.selectedIndex].value;
+    alert("Search by: " + elem.options[elem.selectedIndex].value);
+    opener.targetElement.value = val;
+    this.close();
+    }
+</script>
+</head>
+<body>
+<form id="SelectField" name="SelectField" action="#">
+    <p>Search by: </p>
+    <select id="FieldList" name="FieldList" size="9" style="width:100px;">
+        <option value=key>Key</option>
+        <option value=firstname>First Name</option>
+        <option value=lastname>Last Name</option>
+        <option value=address1>Address 1</option>
+        <option value=address2>Address 2</option>
+        <option value=city>City</option>
+        <option value=state>State</option>
+        <option value=zip>Zip</option>
+    </select>
+    </br>
+    <input type="button" value="Select Field" onclick="makeSelection(this.form, 'FieldList');">
+    </form>
+</body>
+</html>
